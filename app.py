@@ -21,8 +21,11 @@ mongo = PyMongo(app)
 @app.route("/")
 @app.route("/get_tasks")
 def get_tasks():
-    tasks = mongo.db.tasks.find()
+    tasks = list(mongo.db.tasks.find())  # Mongo Cursor Object
     return render_template("tasks.html", tasks=tasks)
+    # rap our entire 'find' method inside of a Python list(),
+    # to convert the
+    # Cursor Object into a proper list.
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -65,7 +68,7 @@ def login():
                         request.form.get("username")))
                     return redirect(url_for(
                         "profile", username=session["user"]))
-                
+
             else:
                 # invalid password match
                 flash("Incorrect Username and/or Password")
